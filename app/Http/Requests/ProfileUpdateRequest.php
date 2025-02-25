@@ -25,6 +25,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'jobTitle' => ['required', 'string', 'min:6', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:2000'],
+            'speciality' => ['required', 'exists:specialties,id'],
         ];
     }
 }

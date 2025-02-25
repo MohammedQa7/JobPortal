@@ -33,7 +33,10 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'isProfileCompleted' => auth()->user()?->isProfileCompleted(),
+                'isPhoneNumberVerified' => auth()->user()?->hasVerifiedPhoneNumber(),
             ],
+            'csrf' => csrf_token(),
         ];
     }
 }

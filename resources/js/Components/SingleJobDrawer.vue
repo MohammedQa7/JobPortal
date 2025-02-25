@@ -15,7 +15,7 @@
                             </div>
                         </SheetDescription>
                     </div>
-                    <div v-if="singleJob.user.id != page.props.auth.user.id" class="favorite">
+                    <div v-if="singleJob.user.id != page.props.auth?.user?.id" class="favorite">
                         <Button variant="outline" class=" size-12">
                             <Bookmark class="!size-6" />
                         </Button>
@@ -72,12 +72,35 @@
                     <div class="project-desc text-primary space-y-4">
                         <h1 class="text-2xl font-bold">About the project</h1>
 
-                        <p class=" leading-6">{{ singleJob.description }}
+                        <p class=" leading-6">{{ singleJob.description }}</p>
+                    </div>
 
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia eius quae odit quibusdam
-                            nostrum, sed quaerat non cupiditate, necessitatibus vero accusantium delectus consequuntur
-                            officiis, autem porro ab. Minus, quas sapiente.lore
-                        </p>
+                    <!-- Project / Job Attachmets -->
+                    <div v-if="singleJob.attachments.length > 0" class="project-desc text-primary space-y-4">
+                        <h1 class="text-2xl font-bold">Attachments</h1>
+
+                        <Collapsible v-model:open="isAttachmentCollapsed" class="w-full space-y-2">
+                            <div class="flex items-center justify-between space-x-4 ">
+                                <h4 v-if="!isAttachmentCollapsed" class="text-sm font-semibold">* Attachments are
+                                    collapsed</h4>
+                                <h4 v-else class="text-sm font-semibold"></h4>
+                                <CollapsibleTrigger as-child>
+                                    <Button variant="ghost" size="sm" class="w-9 p-0">
+                                        <ChevronsUpDownIcon class="h-4 w-4" />
+                                        <span class="sr-only">Toggle</span>
+                                    </Button>
+                                </CollapsibleTrigger>
+                            </div>
+                            <CollapsibleContent class="space-y-2">
+                                <div v-for="(attachment, index) in singleJob.attachments" :key="index"
+                                    class=" rounded-md border px-4 py-3 font-mono text-sm underline cursor-pointer"
+                                    @click.prevent="download(attachment)">
+
+                                    {{ attachment.name }}
+                                </div>
+                            </CollapsibleContent>
+                        </Collapsible>
+
                     </div>
 
                     <!-- Project skills-->
@@ -96,10 +119,14 @@
                     <div class="client-info text-primary space-y-4">
                         <h1 class="text-2xl font-bold">About the client:</h1>
                         <div class="flex flex-wrap h-5 items-center gap-4 text-sm">
-                            <div>Rating</div>
+                            <div class="flex items-center gap-2">
+                                <Rating :disable-rating="true" :rate="singleJob.user.rate" />
+                                <UserRatingsDialog :rate="singleJob.user.rate" />
+                            </div>
                             <Separator orientation="vertical" />
                             <div class="">
-                                <h1>34 jobs posted <span> (77% hire rate) </span></h1>
+                                <h1>{{ singleJob.user.jobsCount }} jobs posted <span>
+                                        ({{ singleJob.user.jobsCompletionRate }}% hire rate) </span></h1>
                             </div>
                             <Separator orientation="vertical" />
                             <div class="flex items-center gap-1">
@@ -120,7 +147,7 @@
                     </div>
 
 
-                    <div v-if="page.props.auth.user?.id != singleJob.user.id && page.props.auth.user"
+                    <div v-if="page.props.auth?.user?.id != singleJob.user.id && page.props.auth?.user"
                         class="send-proposal-btn w-96 md:w-[720px] fixed bottom-10"
                         :class="{ 'left-1/2 transform -translate-x-1/2 !bottom-5': isMobile }">
 
@@ -158,7 +185,7 @@ import SheetContent from '@/Components/ui/sheet/SheetContent.vue';
 import SheetDescription from '@/Components/ui/sheet/SheetDescription.vue';
 import SheetHeader from '@/Components/ui/sheet/SheetHeader.vue';
 import SheetTitle from '@/Components/ui/sheet/SheetTitle.vue';
-import { Bookmark, CalendarClock, CircleDollarSign, DollarSign, X } from 'lucide-vue-next';
+import { Bookmark, CalendarClock, ChevronsUpDownIcon, CircleDollarSign, DollarSign, FileQuestion, X } from 'lucide-vue-next';
 import Button from './ui/button/Button.vue';
 import { DialogClose } from './ui/dialog';
 import Card from './ui/card/Card.vue';
@@ -170,18 +197,25 @@ import { useJobsStore } from '@/stores/JobStore';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import { Link, usePage } from '@inertiajs/vue3';
+import Rating from './Rating.vue';
+import Collapsible from './ui/collapsible/Collapsible.vue';
+import CollapsibleTrigger from './ui/collapsible/CollapsibleTrigger.vue';
+import CollapsibleContent from './ui/collapsible/CollapsibleContent.vue';
+import UserRatingsDialog from './Rating/UserRatingsDialog.vue';
 const emit = defineEmits();
 const page = usePage();
 const JobsStore = useJobsStore();
+const isAttachmentCollapsed = ref(true);
+const isMobile = useMediaQuery('(max-width: 767px)')
 const propsData = defineProps({
     isOpen: Boolean,
     singleJob: Object,
 })
 
-const isMobile = useMediaQuery('(max-width: 767px)')
-
-
-
+const download = (attachment) => {
+    const url = route('download', { attachmentPath: attachment['path'] });
+    window.location.href = url
+}
 
 const CloseDrawer = () => {
     closeDialog(emit);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Specialty;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,12 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $specialities = Specialty::pluck('name', 'id');
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'specialities' => $specialities,
         ]);
     }
 
@@ -29,7 +33,14 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $data = [
+            'name' => $request->validated('name'),
+            'email' => $request->validated('email'),
+            'job_title' => $request->validated('jobTitle'),
+            'bio' => $request->validated('bio'),
+            'specialty_id' => $request->validated('speciality'),
+        ];
+        $request->user()->fill($data);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

@@ -7,6 +7,13 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { Link, Head } from '@inertiajs/vue3';
 import { createPinia } from 'pinia'
+
+// FILEPOND
+import * as FilePond from 'filepond';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+FilePond.registerPlugin(FilePondPluginImagePreview);
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const pinia = createPinia()
 createInertiaApp({

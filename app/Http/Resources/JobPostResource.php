@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
-class ProjectResource extends JsonResource
+class JobPostResource extends JsonResource
 {
 
     public $all_skills = false; // Custom property for external data
@@ -18,7 +18,6 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        ;
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -27,12 +26,24 @@ class ProjectResource extends JsonResource
             'budget' => $this->budget,
             'duration' => $this->duration,
             'status' => $this->status,
-            'skills' => $this->formatSkillsOnCondition($request),
-            'skillCount' => count(collect(explode(',', $this->skills))->chunk(6)->skip(1)->flatten()),
             'user' => new UserResource($this->whenLoaded('user')),
-            'hasUserSubmitProposal' => auth()->user() ? auth()->user()->hasSubmitedProposal($this->resource) : null,
+            'proposal' => when($this->relationLoaded('proposals') && sizeof($this->proposals) > 0, function () {
+                return ProposalResource::collection($this->whenLoaded('proposals'))->first();
+            }),
+            'skills' => $this->formatSkillsOnCondition($request),
+            'attachments' => when($this->relationLoaded('attachments'), function () {
+                return AttachmentResource::collection($this->attachments);
+            }),
+            'proposalsCount' => $this->proposals_count,
+            'skillCount' => count(collect(explode(',', $this->skills))
+                ->chunk(6)
+                ->skip(1)
+                ->flatten()),
+            'hasUserSubmitProposal' => auth()->user()
+            ? auth()->user()->hasSubmitedProposal($this->resource)
+            : null,
+
             'createdAt' => $this->formatCreatedAtOnRouter($request),
-            'test' => $this->extraData,
         ];
 
 
@@ -59,8 +70,10 @@ class ProjectResource extends JsonResource
     function formatSkillsOnCondition($request)
     {
         if ($this->all_skills) {
-            return explode(',', $this->skills); 
+            return explode(',', $this->skills);
         }
         return array_slice(explode(',', $this->skills), 0, 6);
     }
+
+
 }

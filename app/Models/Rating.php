@@ -14,14 +14,25 @@ class Rating extends Model
 
 
 
+
     // Relationships
-    public function project()
+    public function job()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(JobPost::class, 'job_post_id');
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // SCOPES
+
+    function scopeGetUserRating($query , $user)
+    {
+        return $query->whereHas('job', function ($query) use ($user) {
+            $query->withoutGlobalScopes();
+            $query->where('user_id', $user->id);
+        });
     }
 }

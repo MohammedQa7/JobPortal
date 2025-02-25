@@ -1,4 +1,5 @@
 <template>
+    <Toaster />
     <nav
         class="fixed  inset-x-0 mx-auto top-6 z-30 flex justify-between items-center  w-full  max-w-screen-md  lg:max-w-screen-xl  border rounded-xl bg-primary-foreground/40 backdrop-blur-sm p-6">
 
@@ -66,18 +67,23 @@
                     </NavigationMenuContent>
                 </NavigationMenuItem> -->
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger>Find freelancers</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Find work</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                             <li v-for="component in components" :key="component.title">
                                 <NavigationMenuLink as-child>
-                                    <a :href="component.href"
-                                        class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                                    <Link :href="component.href"
+                                        class="flex items-center gap-2 select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                                    <div class="navigaion-icon self-baseline">
+                                        <component :is="component.icon" />
+                                    </div>
+                                    <div class="navigaion-links space-y-1">
                                         <div class="text-sm font-medium leading-none">{{ component.title }}</div>
                                         <p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
                                             {{ component.description }}
                                         </p>
-                                    </a>
+                                    </div>
+                                    </Link>
                                 </NavigationMenuLink>
                             </li>
                         </ul>
@@ -85,8 +91,8 @@
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <Link :href="route('job.index')">
-                    <NavigationMenuLink :class="navigationMenuTriggerStyle()" :active="page.component == 'Jobs'">
-                        Find jobs
+                    <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                        Messages
                     </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
@@ -110,7 +116,7 @@
 
         <!-- Authenticated User -->
         <div v-else>
-            <UserProfileDropdown />
+            <UserProfileDropdown @toastError="emitErrorMessage" />
         </div>
     </nav>
 </template>
@@ -126,45 +132,41 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
+import { toast, Toaster } from '@/Components/ui/toast';
 import UserProfileDropdown from '@/Components/UserProfileDropdown.vue';
+import eventBus from '@/Composable/eventBus';
 import { usePage } from '@inertiajs/vue3';
+import { Binoculars, Scroll, UserSearch } from 'lucide-vue-next';
 const Logo = '/Assets/Images/msar.svg';
 const page = usePage();
 const components = [
     {
-        title: 'Alert Dialog',
-        href: '/docs/components/alert-dialog',
-        description:
-            'A modal dialog that interrupts the user with important content and expects a response.',
+        title: 'Publish a job',
+        href: route('job.create'),
+        description: 'For clients looking to post a job and find the suitable freelancer to work on.',
+        icon: Scroll,
     },
     {
-        title: 'Hover Card',
-        href: '/docs/components/hover-card',
+        title: 'Find job',
+        href: route('job.index'),
         description:
-            'For sighted users to preview content available behind a link.',
+            'For freelancers who is looking for a job',
+        icon: Binoculars,
     },
     {
-        title: 'Progress',
+        title: 'Hire freelancer',
         href: '/docs/components/progress',
-        description:
-            'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
-    },
-    {
-        title: 'Scroll-area',
-        href: '/docs/components/scroll-area',
-        description: 'Visually or semantically separates content.',
-    },
-    {
-        title: 'Tabs',
-        href: '/docs/components/tabs',
-        description:
-            'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
-    },
-    {
-        title: 'Tooltip',
-        href: '/docs/components/tooltip',
-        description:
-            'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+        description: 'For clients looking to hire and send a direct offer to freelancers.',
+        icon: UserSearch
     },
 ]
+
+
+eventBus.on('errorMessage', () => {
+    toast({
+        title: 'something went wrong, Please try again later',
+        variant: 'destructive'
+    })
+})
+
 </script>

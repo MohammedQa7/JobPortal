@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\ProposalTypes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,14 +20,47 @@ class Proposal extends Model
         return 'uuid';
     }
 
-    // Relationships
-    public function project()
+    // helper function
+
+    public function canInviteSeeker()
     {
-        return $this->belongsTo(Project::class);
+        return !$this->invited;
     }
 
-    public function user()
+    // Relationships
+    public function job()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(JobPost::class, 'job_post_id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function jobSeeker()
+    {
+        return $this->belongsTo(User::class, 'job_seeker_id');
+    }
+
+    public function escrow()
+    {
+        return $this->hasMany(Escrow::class);
+    }
+
+
+    // SCOPED
+
+    public function scopeSearchByType($query, $type)
+    {
+        $query->when(
+            $type == 'invites',
+            function ($query) {
+                $query->where('type', ProposalTypes::OFFER->value);
+            },
+            function ($query) {
+                $query->where('type', ProposalTypes::PROPOSAL->value);
+            }
+        );
     }
 }

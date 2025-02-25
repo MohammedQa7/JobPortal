@@ -30,11 +30,15 @@
         "@vueuse/core": "^12.3.0",
         "@vueuse/motion": "^2.2.6",
         "embla-carousel-vue": "^8.5.1",
+        "filepond": "^4.32.7",
+        "filepond-plugin-image-preview": "^4.6.12",
         "lucide-vue-next": "^0.469.0",
+        "mitt": "^3.0.1",
         "pinia": "^2.3.0",
         "radix-vue": "^1.9.12",
         "vaul-vue": "^0.2.0",
         "vee-validate": "^4.15.0",
+        "vue-filepond": "^7.0.4",
         "zod": "^3.24.1"
     }
 }

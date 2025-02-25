@@ -21,6 +21,9 @@ class UserResource extends JsonResource
             'rate' => $this->whenLoaded('rating', function ($query) {
                 return $query->avg('rate') ?? 0;
             }),
+            'jobTitle' => $this->job_title,
+            'jobsCompletionRate' => $this->jobsCompletionRate(),
+            'jobsCount' => $this->jobsCount(),
             'createdAt' => $this->created_at->format('M d , Y'),
         ];
     }

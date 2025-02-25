@@ -18,21 +18,21 @@
                             <Avatar class="h-14 w-14 rounded-full">
                                 <AvatarImage />
                                 <AvatarFallback class="rounded-lg">
-                                    {{ proposalStore.proposal.user.name.slice(0, 2).toUpperCase() }}
+                                    {{ proposalStore.proposal.jobSeeker.name.slice(0, 2).toUpperCase() }}
                                 </AvatarFallback>
                             </Avatar>
-                            <!-- Rating -->
-                            <!-- <Rating :disable-rating="true" :rate="2" /> -->
                         </div>
                         <div class="user-info space-y-1 font-semibold ">
-                            <h1 class="username font-bold text-primaryBtn underline">{{ proposalStore.proposal.user.name
-                                }}
+                            <h1 class="username font-bold text-primaryBtn underline">{{
+                                proposalStore.proposal.jobSeeker.name
+                            }}
                             </h1>
                             <h1 class="speciality ">Fullstack Developer</h1>
                             <h1 class="location text-sm text-muted-foreground ">Palestine</h1>
+                            <!-- Rating -->
                             <div class="flex items-center gap-2">
-                                <Rating :disable-rating="true" :rate="proposalStore.proposal.user.rate" />
-                                <span class="underline">{{ proposalStore.proposal.user.rate.toFixed(1) }}</span>
+                                <Rating :disable-rating="true" :rate="proposalStore.proposal.jobSeeker.rate" />
+                                <span class="underline">{{ proposalStore.proposal.jobSeeker.rate.toFixed(1) }}</span>
                             </div>
                             <div class="proposal-info space-y-3 pt-2">
                                 <div class="flex items-center gap-12">

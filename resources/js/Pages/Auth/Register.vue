@@ -8,6 +8,7 @@ import Input from '@/components/ui/input/Input.vue';
 
 const form = useForm({
     name: '',
+    username: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -27,12 +28,21 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Full name" />
 
                 <Input id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
                     autocomplete="name" />
 
                 <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="username" value="Username" />
+
+                <Input id="usernmae" type="text" class="mt-1 block w-full" v-model="form.username" required autofocus
+                    autocomplete="username" />
+
+                <InputError class="mt-2" :message="form.errors.username" />
             </div>
 
             <div class="mt-4">

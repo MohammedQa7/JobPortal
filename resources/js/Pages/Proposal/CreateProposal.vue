@@ -5,7 +5,6 @@
             <h1 class="text-4xl font-semibold">Submit a proposal</h1>
 
         </div>
-
         <!-- Job Description Section-->
         <Card class="space-y-3">
             <CardHeader class="text-xl font-semibold">
@@ -239,13 +238,15 @@ const deductedAmount = ref();
 const receivedAmount = ref();
 const propsData = defineProps({
     job: Object,
+    proposalTypes: Object,
     tax: Number,
 });
 const form = useForm({
-    project: null,
+    job: null,
     bid: 5,
     duration: null,
     coverLetter: '',
+    type: propsData.proposalTypes.proposal,
 })
 watch(form, () => {
     CalculateBidFees2();
@@ -259,7 +260,6 @@ const CalculateBidFees2 = () => {
         receivedAmount.value = fees.receivedAmount;
         deductedAmount.value = fees.deductedAmount;
 
-
     }
 
 
@@ -267,16 +267,10 @@ const CalculateBidFees2 = () => {
 
 const createProposal = () => {
     //  set project and user value to the form
-    form.project = propsData.job.data.id;
+    form.job = propsData.job.data.id;
 
     form.post(route('proposal.store'), {
         preserveScroll: true,
-        onSuccess: () => {
-            toast({
-                title: 'Proposal has been submited',
-                description: 'Go to your proposals page in order to edit or cancel the proposal',
-            });
-        },
         onError: () => {
             toast({
                 title: 'Something went wrong, please try again',

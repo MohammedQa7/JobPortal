@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('proposals', function (Blueprint $table) {
-            $table->boolean('is_reviewed')->after('duration')->default(false);
-            $table->timestamp('editing_ends_at')->nullable();
+        Schema::table('job_posts', function (Blueprint $table) {
+            $table->unsignedBigInteger('category_id')->default(1);
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('proposals', function (Blueprint $table) {
-            Schema::dropIfExists('proposals');
+        Schema::table('job_posts', function (Blueprint $table) {
+            Schema::dropIfExists('job_posts');
         });
     }
 };

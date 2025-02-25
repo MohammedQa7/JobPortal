@@ -1,13 +1,14 @@
 <template>
     <Toaster />
+
     <div class="proposal-create space-y-6 " :class="{ 'pb-40': isMobile }">
-        <div v-if="!isMobile" class="heading flex justify-between items-center">
+        <WarningProposalSection v-if="proposal.data.status == 'insufficient funds'" />
+        <div v-if="!isMobile && canUserEditProposal" class="heading flex justify-between items-center">
             <h1 class="text-4xl font-semibold">Proposal details</h1>
             <div v-if="!isEditing" class="editing-proposal-btn  hidden sm:flex flex-col gap-3 w-72  ">
                 <Button @click.prevent="isEditing = !isEditing" class="bg-primaryBtn w-full"
                     :disabled="!proposal.data.canEdit">
                     Edit Proposal
-                    {{ proposal.data.canEdit }}
                 </Button>
                 <Button variant="outline" :disabled="!proposal.data.canEdit">
                     Withdraw Proposal
@@ -38,20 +39,20 @@
                 <section class="space-y-5">
                     <div class="job-info grid grid-cols-12 gap-2">
                         <div class="job-info space-y-3 col-span-12 md:col-span-10">
-                            <h5 class="job-name text-lg font-bold ">{{ proposal.data.project.title }}</h5>
+                            <h5 class="job-name text-lg font-bold ">{{ proposal.data.job.title }}</h5>
 
                             <div class="flex items-center gap-4">
                                 <Badge
                                     class="px-3.5 py-1 bg-muted-foreground/20 text-muted-foreground hover:text-muted">
                                     Category Name</Badge>
 
-                                <span class="text-sm text-muted-foreground">Posted {{ proposal.data.project.createdAt
+                                <span class="text-sm text-muted-foreground">Posted {{ proposal.data.job.createdAt
                                     }}</span>
                             </div>
 
                             <div class="job-desc">
                                 <p>
-                                    {{ proposal.data.project.description }}
+                                    {{ proposal.data.job.description }}
 
                                 </p>
                             </div>
@@ -63,13 +64,13 @@
                             <div class="job-duration flex items-center gap-2 mb-5">
                                 <Timer class=" self-baseline size-5" />
                                 <div>
-                                    <p class="text-sm font-semibold">{{ proposal.data.project.duration }} / Day</p>
+                                    <p class="text-sm font-semibold">{{ proposal.data.job.duration }} / Day</p>
                                 </div>
                             </div>
                             <div class="job-budget flex items-center gap-2">
                                 <Tag class=" self-baseline size-5" />
                                 <div>
-                                    <p class="text-sm font-semibold">$ {{ proposal.data.project.budget }} </p>
+                                    <p class="text-sm font-semibold">$ {{ proposal.data.job.budget }} </p>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +81,7 @@
                         <h1 class="text-xl font-semibold">Skills and Expertise:</h1>
 
                         <div class="flex flex-wrap gap-3">
-                            <Badge v-for="(skill, index) in proposal.data.project.skills" :key="index"
+                            <Badge v-for="(skill, index) in proposal.data.job.skills" :key="index"
                                 class="px-3.5 py-1 bg-muted-foreground/20 text-muted-foreground hover:text-muted">
                                 {{ skill }}</Badge>
                         </div>
@@ -92,7 +93,7 @@
             </CardContent>
         </Card>
 
-        <form @submit.prevent="createProposal" class="space-y-6">
+        <form class="space-y-6" :class="{ 'pb-32': !canUserEditProposal, '!pb-0': isMobile }">
             <!-- Terms & Bid Section-->
             <Card class="space-y-3">
                 <CardHeader class="text-xl font-semibold">
@@ -147,7 +148,8 @@
                                 </div>
 
 
-                                <div class="recieve-from-bid  flex justify-between items-center">
+                                <div v-if="!canUserEditProposal"
+                                    class="recieve-from-bid  flex justify-between items-center">
                                     <div class="w-1/2 space-y-2">
                                         <h1 class="font-semibold">You’ll Receive</h1>
                                         <h2 class="text-muted-foreground">The estimated amount you'll receive after
@@ -227,7 +229,7 @@
 
 
 
-            <div v-if="isMobile"
+            <div v-if="isMobile && canUserEditProposal"
                 class="edit-proposal-responsive w-full fixed bottom-0 right-0 bg-white/20 backdrop-blur-lg px-6 py-8 space-y-4 border">
                 <div v-if="!isEditing" class="space-y-4">
                     <h1 class="flex items-center gap-2 text-sm text-muted-foreground">
@@ -253,8 +255,26 @@
                     </Button>
                 </div>
             </div>
-
         </form>
+
+
+
+        <div v-if="!canUserEditProposal && proposal.data.status == 'Pending'"
+            class="edit-proposal-responsive w-full fixed bottom-0 right-0 bg-white/20 backdrop-blur-lg px-6 py-8 space-y-4 border ">
+            <div class="space-y-4">
+                <div class="flex gap-2 items-center">
+
+                    <Button @click.prevent="acceptProposal" class="bg-primaryBtn w-full text-primary-foreground">
+                        Accept
+                    </Button>
+                    <Button @click.prevent="declineProposal" variant="outline"
+                        class="w-full hover:bg-destructive hover:text-primary-foreground">
+                        Decline
+                    </Button>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </template>
@@ -272,11 +292,12 @@ import { Textarea } from '@/components/ui/textarea';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { BadgePercent, Info, Tag, Timer } from 'lucide-vue-next';
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useToast } from '@/components/ui/toast/use-toast'
 import { useMediaQuery } from '@vueuse/core';
 import { calculateBidFees } from '@/Composable/caculateFees';
+import WarningProposalSection from '@/Components/WarningProposalSection.vue';
 const { toast } = useToast();
 const page = usePage();
 const errorRefs = ref([]);
@@ -286,10 +307,12 @@ const isEditing = ref(false);
 const isMobile = useMediaQuery('(max-width: 767px)');
 const propsData = defineProps({
     proposal: Object,
+    proposalTypes: Object,
+    successSession: Boolean,
     tax: Number,
 });
 const form = useForm({
-    project: null,
+    job: null,
     bid: null,
     duration: null,
     coverLetter: '',
@@ -298,6 +321,17 @@ watch(form, () => {
     getBidFeed();
 })
 
+const canUserEditProposal = computed(() => {
+
+    if (propsData.proposal.data.type == propsData.proposalTypes.offer) {
+
+        return propsData.proposal.data.client.id == page.props.auth.user.id;
+
+    } else {
+
+        return propsData.proposal.data.jobSeeker.id == page.props.auth.user.id;
+    }
+})
 
 const getBidFeed = () => {
     if (!isNaN(form.bid)) {
@@ -311,7 +345,7 @@ const getBidFeed = () => {
 const bindProposalData = () => {
     Object.assign(form, propsData.proposal.data);
     // passing the projectID not the whole project data
-    form.project = propsData.proposal.data.project.id;
+    form.job = propsData.proposal.data.job.id;
 }
 
 const updateProposal = () => {
@@ -333,9 +367,47 @@ const updateProposal = () => {
     }
 }
 
+
+const acceptProposal = () => {
+    router.put(route('proposal.accept', { proposal: propsData.proposal.data.uuid }), {}, {
+        onSuccess: () => {
+            toast({
+                title: 'Offer has been accepted, You can now start working on the job/project'
+            })
+        },
+        onError: () => {
+            toast({
+                title: 'Something went wrong while trying to accept the offer',
+                variant: 'destructive'
+            })
+        }
+    })
+}
+const declineProposal = () => {
+    router.put(route('proposal.decline', { proposal: propsData.proposal.data.uuid }), {}, {
+        onSuccess: () => {
+            toast({
+                title: 'Offer has been declined.'
+            })
+        },
+        onError: () => {
+            toast({
+                title: 'Something went wrong while trying to decline the offer',
+                variant: 'destructive'
+            })
+        }
+    })
+}
+
 onMounted(() => {
     bindProposalData();
     getBidFeed();
+    if (propsData.successSession) {
+        toast({
+            title: 'Proposal has been submited',
+            description: 'Go to your proposals page in order to edit or cancel the proposal',
+        });
+    }
 })
 defineOptions({
     layout: MainLayout,

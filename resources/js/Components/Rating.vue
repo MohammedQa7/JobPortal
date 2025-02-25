@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-row-reverse justify-end items-center">
-        <input v-if="!disableRating" id="hs-ratings-readonly-1" type="radio" @click="selectedRating = 1"
+        <input v-if="!disableRating" id="hs-ratings-readonly-1" type="radio" @click="selectedRating = 5"
             class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
             name="hs-ratings-readonly" value="1">
         <label for="hs-ratings-readonly-1"
@@ -13,7 +13,7 @@
                 </path>
             </svg>
         </label>
-        <input v-if="!disableRating" id="hs-ratings-readonly-2" type="radio" @click="selectedRating = 2"
+        <input v-if="!disableRating" id="hs-ratings-readonly-2" type="radio" @click="selectedRating = 4"
             class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
             name="hs-ratings-readonly" value="2">
         <label for="hs-ratings-readonly-2"
@@ -39,7 +39,7 @@
                 </path>
             </svg>
         </label>
-        <input v-if="!disableRating" id="hs-ratings-readonly-4" type="radio" @click="selectedRating = 4"
+        <input v-if="!disableRating" id="hs-ratings-readonly-4" type="radio" @click="selectedRating = 2"
             class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
             name="hs-ratings-readonly" value="4">
         <label for="hs-ratings-readonly-4"
@@ -52,7 +52,7 @@
                 </path>
             </svg>
         </label>
-        <input v-if="!disableRating" id="hs-ratings-readonly-5" type="radio" @click="selectedRating = 5"
+        <input v-if="!disableRating" id="hs-ratings-readonly-5" type="radio" @click="selectedRating = 1"
             class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
             name="hs-ratings-readonly" value="5">
         <label for="hs-ratings-readonly-5"
@@ -67,14 +67,21 @@
         </label>
     </div>
     <!-- End Rating -->
+
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const selectedRating = ref(5);
+import axios from 'axios';
+import { ref, watch } from 'vue';
+const selectedRating = ref(null);
+const emit = defineEmits();
 
 const propsData = defineProps({
     disableRating: Boolean,
     rate: Number,
+})
+
+watch(selectedRating, () => {
+    emit('bindUserRating', selectedRating.value);
 })
 </script>

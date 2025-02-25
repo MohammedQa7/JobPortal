@@ -19,8 +19,8 @@
                     <CardContent>
                         <div v-for="(job, index) in jobs.data" :key="index"
                             class="job-info flex flex-col justify-between gap-5 md:flex-row md:items-center md:gap-28 mb-8">
-                            <div class="flex flex-col gap-5 md:flex-row md:items-center md:gap-28">
-                                <div class="job-dates  order-2 md:order-1">
+                            <div class="flex flex-col gap-5 md:flex-row   items-center ">
+                                <div class="job-dates order-2 md:order-1 ">
                                     <h1 class="">{{ job.createdAt }}</h1>
                                     <h2 class="text-sm text-muted-forground">{{ job.formatedCreatedAt }}</h2>
                                 </div>
@@ -28,15 +28,35 @@
                                 <div
                                     class="job-project-name text-lg font-semibold !text-primaryBtn underline order-1 md:order-1">
                                     <Link @click.prevent="OpenJobDrawer(job.slug)">
-                                    <h1>{{ job.title }}</h1>
+                                    <h1 class="items-baseline">{{ job.title }}</h1>
                                     </Link>
                                 </div>
                             </div>
-                            <div class="job-project-name font-semibold !text-primaryBtn order-3 md:order-3">
+                            <div
+                                class="job-project-actions flex items-center gap-4 font-semibold !text-primaryBtn order-3 md:order-3">
                                 <Link :href="route('job.proposals', { job: job.slug })">
                                 <Button variant="outline"> Proposals</Button>
                                 </Link>
+
+                                <div class="dropdown">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger as-child>
+                                            <Button variant="outline">
+                                                <MoreVertical />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                                            <DropdownMenuItem>Billing</DropdownMenuItem>
+                                            <DropdownMenuItem>Team</DropdownMenuItem>
+                                            <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
+
                         </div>
                     </CardContent>
                 </CollapsibleContent>
@@ -61,6 +81,13 @@ import { ref, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import SingleJobDrawer from '@/Components/SingleJobDrawer.vue';
 import { useJobsStore } from '@/stores/JobStore';
+import DropdownMenu from '@/Components/ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuTrigger from '@/Components/ui/dropdown-menu/DropdownMenuTrigger.vue';
+import DropdownMenuContent from '@/Components/ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuLabel from '@/Components/ui/dropdown-menu/DropdownMenuLabel.vue';
+import DropdownMenuSeparator from '@/Components/ui/dropdown-menu/DropdownMenuSeparator.vue';
+import DropdownMenuItem from '@/Components/ui/dropdown-menu/DropdownMenuItem.vue';
+import { MoreVertical } from 'lucide-vue-next';
 const isSubmitedjobOpend = ref(true);
 const isJobDrawerOpend = ref(false);
 const queryParameter = ref('');

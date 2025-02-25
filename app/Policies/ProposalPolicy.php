@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enum\ProposalStatus;
+use App\Enum\ProposalTypes;
 use App\Models\Project;
 use App\Models\Proposal;
 use App\Models\User;
@@ -24,8 +26,14 @@ class ProposalPolicy
     public function view(User $user, Proposal $proposal): bool
     {
         // Example: Only allow the user to view the proposal if they are part of the related project
+        if ($proposal->type == ProposalTypes::PROPOSAL->value && $proposal->job_seeker_id == $user->id) {
+            return true;
+        } else if ($proposal->client_id == $user->id || $proposal->job_seeker_id == $user->id) {
+            return true;
+        }
         return false;
     }
+
 
     /**
      * Determine whether the user can create models.
@@ -41,7 +49,12 @@ class ProposalPolicy
     public function update(User $user, Proposal $proposal): bool
     {
         // return true;
-        return ($user->id == $proposal->user_id && !$proposal->is_reviewed && $proposal->editing_ends_at >= now());
+        if ($proposal->type == ProposalTypes::PROPOSAL->value && $proposal->job_seeker_id == $user->id && !$proposal->is_reviewed && $proposal->editing_ends_at >= now()) {
+            return true;
+        } else if ($proposal->client_id == $user->id && !$proposal->is_reviewed && $proposal->editing_ends_at >= now()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -65,6 +78,15 @@ class ProposalPolicy
      */
     public function forceDelete(User $user, Proposal $proposal): bool
     {
+        return false;
+    }
+
+    public function updateStatus(User $user, Proposal $proposal): bool
+    {
+        if ($proposal->type == ProposalTypes::OFFER->value) {
+            return ($proposal->job_seeker_id == $user->id && $proposal->status == ProposalStatus::PENDING->value);
+        }
+
         return false;
     }
 }

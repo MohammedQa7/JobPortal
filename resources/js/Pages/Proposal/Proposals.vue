@@ -6,62 +6,34 @@
 
         </div>
 
-        <!-- Job Description Section-->
-        <Collapsible v-model:open="isSubmitedProposalOpend">
-            <Card class="space-y-3">
-                <CollapsibleTrigger class="w-full">
-                    <CardHeader class="text-left text-xl font-semibold ">
-                        Submited proposals ({{ proposalsCount }})
-                    </CardHeader>
-                </CollapsibleTrigger>
+        <JobProposal :proposals="proposals" :proposals-count="proposalsCount" />
 
-                <CollapsibleContent>
-                    <CardContent>
-                        <div v-for="(proposal, index) in proposals.data" :key="index"
-                            class="proposal-info flex flex-col justify-between gap-5 md:flex-row md:items-center md:gap-28">
-                            <div class="flex flex-col gap-5 md:flex-row md:items-center md:gap-28">
-                                <div class="proposal-dates  order-2 md:order-1">
-                                    <h1 class="">{{ proposal.createdAt }}</h1>
-                                    <h2 class="text-sm text-muted-forground">{{ proposal.formatedCreatedAt }}</h2>
-                                </div>
+        <JobOffer :offers="offers" :offers-count="offersCount" />
 
-                                <div
-                                    class="proposal-project-name text-lg font-semibold !text-primaryBtn underline order-1 md:order-1">
-                                    <Link :href="route('proposal.show', { proposal: proposal.uuid })">
+        <JobOfferSent :sent-offers="sentOffers" :sent-offer-count="sentOffersCount" />
 
-                                    <h1>{{ proposal.project.title }}</h1>
-                                    </Link>
-                                </div>
-                            </div>
-                            <div class="proposal-project-name font-semibold !text-primaryBtn order-3 md:order-3">
-                                <span v-if="!proposal.isProposalReviewed" class="text-semibold">Not reviewd</span>
-                                <span v-else class="text-semibold">Reviewed by client</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </CollapsibleContent>
-            </Card>
-
-
-        </Collapsible>
+        <OnGoingJobs :jobs="onGoingJobs" :jobs-count="onGoingJobsCount" />
     </div>
 </template>
 
 <script setup>
-import Card from '@/Components/ui/card/Card.vue';
-import CardContent from '@/Components/ui/card/CardContent.vue';
-import CardHeader from '@/Components/ui/card/CardHeader.vue';
-import Collapsible from '@/Components/ui/collapsible/Collapsible.vue';
-import CollapsibleContent from '@/Components/ui/collapsible/CollapsibleContent.vue';
-import CollapsibleTrigger from '@/Components/ui/collapsible/CollapsibleTrigger.vue';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Toaster from '@/components/ui/toast/Toaster.vue';
-import { ref } from 'vue';
-const isSubmitedProposalOpend = ref(true);
+import { router } from '@inertiajs/vue3';
+import JobProposal from '@/Components/Jobs/JobProposal.vue';
+import JobOffer from '@/Components/Jobs/JobOffer.vue';
+import JobOfferSent from '@/Components/Jobs/JobOfferSent.vue';
+import OnGoingJobs from '@/Components/Jobs/onGoingJobs.vue';
 const propsData = defineProps({
     proposals: Array,
+    offers: Array,
+    sentOffers: Array,
+    onGoingJobs: Array,
     proposalsCount: Number,
-})
+    offersCount: Number,
+    sentOffersCount: Number,
+    onGoingJobsCount: Number,
+});
 
 defineOptions({
     layout: MainLayout,
