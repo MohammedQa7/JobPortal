@@ -1,46 +1,45 @@
 
 ![Screenshot 2024-11-12 at 20-32-35 Laravel](https://github.com/user-attachments/assets/0dae23ab-d43f-4054-b188-762f6aea7e04)
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Job Portal
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## 🚀 Key Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Job Listings:** Employers can post and manage job openings.
+- **Applications:** Job seekers can apply to jobs and track status.
+- **User Roles:** Separate dashboards for Admin, Employer, and Job Seeker.
+- **Profiles:** Resume builder, skills, experience, and education.
+- **Search & Filter:** Find jobs by title, category, location, or type.
+- **Wallet System:** Employers can charge their wallet to pay for job postings and services.
+- **Notifications:** Email alerts for new jobs and application updates.
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🚀 Setup Instructions
+1. Clone the repository
+2. Install dependencies via `composer install` and `npm install`
+3. Set up `.env` and run migrations
+4. Start local development server with `php artisan serve`
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Screenshots
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+![Screenshot 2024-11-12 at 20-32-35 Laravel](https://github.com/user-attachments/assets/2e984fbf-845f-43dd-b045-07b5c643e9a9)
 
-## Security Vulnerabilities
+![Screenshot 2024-11-12 at 20-31-56 Laravel](https://github.com/user-attachments/assets/2d99937f-976c-40f3-aefd-75eb262ec496)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+![Screenshot 2024-11-12 at 20-33-51 Laravel](https://github.com/user-attachments/assets/9c5fa2db-24f3-44e9-8014-06f802b7ac95)
 
-## License
+![Screenshot 2024-11-12 at 20-34-22 Laravel](https://github.com/user-attachments/assets/1079f3bc-250f-4419-8bb9-271019a4c309)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+![Screenshot 2024-11-12 at 20-34-59 Laravel](https://github.com/user-attachments/assets/7a6569b9-9d0d-4d44-8ac8-90f4f9499c1a)
+
+<img width="1395" height="782" alt="Image" src="https://github.com/user-attachments/assets/5f9ff34a-5812-498f-b697-bde34c4ad7ea" />
+<img width="1395" height="782" alt="Image" src="https://github.com/user-attachments/assets/afe3bb94-cf60-4e4a-9fae-e8153242e427" />
+<img width="1395" height="782" alt="Image" src="https://github.com/user-attachments/assets/67bd9881-89ae-487e-9201-35a027d1e3f0" />
+<img width="1395" height="782" alt="Image" src="https://github.com/user-attachments/assets/848190b4-c20c-49f2-9bd4-88a1445b5587" />
+
+
